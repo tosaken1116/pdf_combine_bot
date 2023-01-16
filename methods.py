@@ -19,6 +19,7 @@ def convert_pdf_to_combined_pdf():
     pdf_to_image()
     image_to_pdf()
     pdf_combine()
+
 def pdf_combine():
     pdf_data = glob.glob('./pdf/*.pdf')
     if len(pdf_data) !=0:
@@ -51,6 +52,7 @@ def pdf_to_image():
     pdf_data = glob.glob('./download/*.pdf')
     for index,pdf in enumerate(pdf_data):
         convert_from_path(pdf,output_folder=img_path,fmt='png',output_file=index,single_file=False)
+
 def image_to_pdf():
     png_data = glob.glob("./images/*.png")
     png_data.sort()
@@ -63,5 +65,3 @@ def image_to_pdf():
         output_path = f"./pdf/{index}.pdf"
         with open(output_path, "wb") as f:
             f.write(img2pdf.convert(png,layout_fun=layout_fun))
-
-convert_pdf_to_combined_pdf()

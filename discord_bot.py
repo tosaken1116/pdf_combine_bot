@@ -36,5 +36,4 @@ async def on_message(message):
         await message.channel.send(str(e))
 
 if __name__=="__main__":
-
     client.run(os.getenv('TOKEN'))
