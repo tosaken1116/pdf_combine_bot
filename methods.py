@@ -33,10 +33,6 @@ def pdf_combine():
 
 def download_attachment_pdf(attachments:list):
     saved_pdf_num = sum(os.path.isfile(os.path.join("./pdf", name)) for name in os.listdir("./pdf"))
-    print('=====================')
-    print(saved_pdf_num)
-    print(len(attachments))
-    print('=====================')
     for index,pdf in enumerate(attachments):
         url =pdf.url
         pdf_download(url, f"./pdf/{saved_pdf_num+index}.pdf")
