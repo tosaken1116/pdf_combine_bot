@@ -1,4 +1,6 @@
+import datetime
 import glob
+import json
 import os
 import shutil
 import urllib
@@ -16,8 +18,8 @@ def delete_files():
         os.mkdir(directory)
 
 def convert_pdf_to_combined_pdf():
-    pdf_to_image()
-    image_to_pdf()
+    # pdf_to_image()
+    # image_to_pdf()
     pdf_combine()
 
 def pdf_combine():
@@ -30,9 +32,14 @@ def pdf_combine():
         output_pdf.save('./file/result.pdf')
 
 def download_attachment_pdf(attachments:list):
+    saved_pdf_num = sum(os.path.isfile(os.path.join("./pdf", name)) for name in os.listdir("./pdf"))
+    print('=====================')
+    print(saved_pdf_num)
+    print(len(attachments))
+    print('=====================')
     for index,pdf in enumerate(attachments):
         url =pdf.url
-        pdf_download(url, f"./pdf/{index}.pdf")
+        pdf_download(url, f"./pdf/{saved_pdf_num+index}.pdf")
 
 def pdf_download(url, save_pass):
     opener = urllib.request.build_opener()
@@ -65,3 +72,25 @@ def image_to_pdf():
         output_path = f"./pdf/{index}.pdf"
         with open(output_path, "wb") as f:
             f.write(img2pdf.convert(png,layout_fun=layout_fun))
+
+def save_append_flag(state):
+    with open("./append_flag.json","w")as f:
+        json.dump({"append":state,"time":str(datetime.datetime.now())},f)
+
+def load_append_flag():
+    with open("./append_flag.json","r") as f:
+        state = json.load(f)
+    return state
+
+def is_time_passed(compare_time):
+    now = datetime.datetime.now()
+    format_compare_time = datetime.datetime.strptime(compare_time,"%Y-%m-%d %H:%M:%S.%f")
+    return (now-format_compare_time).seconds>60
+
+def check_time_passed(compare_time):
+    if is_time_passed(compare_time):
+        save_append_flag(False)
+        delete_files()
+        return False
+    else:
+        return True
